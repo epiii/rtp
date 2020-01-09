@@ -27,10 +27,10 @@ function App() {
           <div style={{ background: '#fff', padding: 24, minHeight: 380 }}>
             <Switch>
               {/* <Route exact path="/" component={Home} /> */}
-              <Route exact path="/" component={WildPokemonList} />
-              <Route path="/my-pokemon-list" component={MyPokemonList} />
-              <Route path="/wild-pokemon-list" component={WildPokemonList} />
-              <Route path="/wild-pokemon-detail/:id" component={WildPokemonDetail} />
+              <Route exact path="/rtp" component={WildPokemonList} />
+              <Route path="/rtp/my-pokemon-list" component={MyPokemonList} />
+              <Route path="/rtp/wild-pokemon-list" component={WildPokemonList} />
+              <Route path="/rtp/wild-pokemon-detail/:id" component={WildPokemonDetail} />
             </Switch>
           </div>
 
@@ -42,9 +42,5 @@ function App() {
     </Router>
   );
 }
-const Home = () => (
-  <div>
-    <h1>Home Page</h1>
-  </div>
-)
+
 export default App;

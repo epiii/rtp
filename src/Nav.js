@@ -45,14 +45,14 @@ function Nav() {
             // selectedKeys={[this.state.current]}
             >
                 <Menu.Item key="all">
-                    <Link to="/wild-pokemon-list">
+                    <Link to="/rtp/wild-pokemon-list">
                         <Icon type="appstore" />
                         All
                 </Link>
                 </Menu.Item>
 
                 <Menu.Item key="alipay">
-                    <Link to="/my-pokemon-list">
+                    <Link to="/rtp/my-pokemon-list">
                         <Icon type="mail" />
                         My Collection
                 </Link>

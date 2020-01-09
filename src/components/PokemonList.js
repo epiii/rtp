@@ -19,9 +19,9 @@ export default function PokemonList({ pokemon, loading }) {
                 )
             } else {
                 return (
-                    <Link key={p.name} to={`/wild-pokemon-detail/${urlx[6]}`}>
-
+                    <Link key={p.name} to={`/rtp/wild-pokemon-detail/${urlx[6]}`}>
                         <Card
+
                             hoverable
                             style={{ width: 240 }}
                             cover={<img alt="example" src={imgPath + urlx[6] + '.png'} />}
