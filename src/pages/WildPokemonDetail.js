@@ -4,7 +4,24 @@ import axios from 'axios'
 import Pagination from '../components/Pagination'
 import PokemonMoves from '../components/PokemonMoves';
 import PokemonTypes from '../components/PokemonTypes';
-import { Spin, Alert, Modal, Button, Form, Icon, Input, Checkbox } from 'antd'
+import { StickyContainer, Sticky } from 'react-sticky';
+// import { useHistory } from "react-router-dom";
+import {
+  Row, Col,
+  Card,
+  Descriptions,
+  Avatar,
+  Spin,
+  Carousel,
+  Alert,
+  Modal,
+  Tabs,
+  Button,
+  Form,
+  Icon,
+  Input,
+  Checkbox
+} from 'antd'
 
 function WildPokemonDetail({ match }) {
   const [pokemon, setPokemon] = useState([])
@@ -13,64 +30,43 @@ function WildPokemonDetail({ match }) {
   const [pokemonTypes, setPokemonTypes] = useState([])
   const [pokemonMoves, setPokemonMoves] = useState([])
   const [currentPageUrl, setCurrentPageUrl] = useState('https://pokeapi.co/api/v2/pokemon/')
-  const [nextPageUrl, setNextPageUrl] = useState()
-  const [prevPageUrl, setPrevPageUrl] = useState()
   const [loading, setLoading] = useState(true)
   const [loading2, setLoading2] = useState(false)
-  // const [pokemon, setPokemon] = useState(['bulbasaur', 'charmender'])
-  const [modalText, setModalText] = useState('Confirmation')
+  const [name, setName] = useState()
   const [visible, setVisible] = useState(false)
   const [confirmLoading, setConfirmLoading] = useState(false)
 
   useEffect(() => {
     fetchItem()
-    // console.log(match)
   }, [currentPageUrl])
 
   const fetchItem = () => {
     setLoading(true)
-    // axios.get('https://pokeapi.co/api/v2/pokemon/' + match.params.id)
+    setLoading2(true)
     let cancel
     axios.get(`https://pokeapi.co/api/v2/pokemon/${match.params.id}`, {
-      // axios.get(currentPageUrl, {
       cancelToken: new axios.CancelToken(c => cancel = c)
     })
       .then(res => {
-        // console.log(res);
+        console.log(res);
         setLoading(false)
         setLoading2(false)
-        // setNextPageUrl(res.data.next)
-        // setPrevPageUrl(res.data.previous)
         setPokemon(res.data)
         setPokemonMoves(res.data.moves)
         setPokemonTypes(res.data.types)
-        // setPokemon(res.data.results.map(p => p))
-        // setPokemon(res.data.results.map(p => p.name))
       })
     return () => cancel()
   }
 
-  // function goToNextPage() {
-  //   setCurrentPageUrl(nextPageUrl)
-  // }
-
-  // function goToPrevPage() {
-  //   setCurrentPageUrl(prevPageUrl)
-  // }
-
   if (loading) return 'loading...'
-
-  // console.log(pokemon.moves)
-  // console.log(pokemon[1].name)
   let imgPath = 'https://raw.githubusercontent.com/PokeApi/sprites/master/sprites/pokemon/'
 
   const catchPokemon = (pokemon) => {
-    let prob = Math.random()
     setLoading2(true)
-    console.log(prob)
 
     setTimeout(function () {
-      setLoading2(false)
+      let prob = Math.random()
+      console.log('masuk itung')
       if (prob < 0.5) {
         setPokemonDex(state => {
           console.log('before', state)
@@ -85,9 +81,12 @@ function WildPokemonDetail({ match }) {
           console.log('after', state)
           return state
         })
-        setPokemonName()
+        successPokemonModal()
+        // setPokemonName()
       } else {
-        alert("failed :( , try again ");
+        // alert("failed :( , try again ");
+        failedPokemonModal()
+        setLoading2(false)
       }
     }, 1000)
   }
@@ -98,33 +97,23 @@ function WildPokemonDetail({ match }) {
     console.log(name)
   }
 
-  // const catchPokemon = (pokemon) => {
-
-  //   setPokemonDex(state => {
-  //     const monExists = (state.filter(p => pokemon.id == p.id).length > 0)
-  //     console.log(monExists)
-
-  //     if (!monExists) {
-  //       state = [...state, pokemon]
-  //       state.sort(function (a, b) {
-  //         return a.id - b.id
-  //       })
-  //     }
-  //     return state
-  //   })
-  // }
-  const catchPokemonModal = () => {
+  const successPokemonModal = () => {
     setVisible(true)
-    // this.setState({
-    //   visible: true,
-    // });
   };
 
+  const failedPokemonModal = () => {
+    Modal.error({
+      title: 'Confirmation',
+      content: 'Failed, try again to catch it ',
+    });
+  }
+
   const handleOk = () => {
-    setModalText('The modal will be closed after two seconds')
     setConfirmLoading(true)
 
     setTimeout(() => {
+      setName(pokemon.name)
+      setLoading2(false)
       setVisible(false)
       setConfirmLoading(false)
     }, 2000);
@@ -132,19 +121,83 @@ function WildPokemonDetail({ match }) {
 
   const handleCancel = () => {
     console.log('Clicked cancel button');
+    setLoading2(false)
     setVisible(false)
   };
+
+  const { TabPane } = Tabs;
+
+  const renderTabBar = (props, DefaultTabBar) => (
+    <Sticky bottomOffset={80}>
+      {({ style }) => (
+        <DefaultTabBar {...props} style={{ ...style, zIndex: 1, background: '#fff' }} />
+      )}
+    </Sticky>
+  );
+
+  const { Meta } = Card;
+  // let history = useHistory();
+  let sp = pokemon.sprites
+  console.log(sp)
 
   return (
     <div className="app-wrapper" >
       <Spin spinning={loading2} delay={500}>
         <header>
           <h1 className="title">Wild Pokemon Detail</h1>
+          {/* <button onClick={() => history.goBack()}>Back</button> */}
         </header>
 
-        <section className="wild-pokemon">
-          <img src={imgPath + match.params.id + '.png'} className="sprite"></img>
-          <h3>{pokemon.name}</h3>
+        <section>
+          {/* <section className="wild-pokemon"> */}
+          <Row type="flex" justify="space-around" align="top">
+
+            <Col xs={24} sm={4} md={6} lg={8} xl={4}>
+              <Carousel autoplay>
+                <div>
+                  <Card
+                    cover={
+                      <img
+                        alt="example"
+                        src={imgPath + match.params.id + '.png'}></img>
+                    }
+                  >
+                    <Meta
+                      title=""
+                      description="Front Side"
+                    />
+                  </Card>
+                </div>
+
+                <div>
+                  <Card
+                    cover={
+                      <img
+                        alt="example"
+                        src={imgPath + 'back/' + match.params.id + '.png'}></img>
+                    }
+                  >
+                    <Meta
+                      title=""
+                      description="Back Side"
+                    />
+                  </Card>
+                </div>
+              </Carousel>
+            </Col>
+
+            <Col style={{ flex: 1 / 2 }} xs={24} sm={4} md={12} lg={8} xl={10}>
+              <Descriptions title="Pokemon Profile">
+                <Descriptions.Item label="name">{pokemon.name}</Descriptions.Item>
+                <Descriptions.Item label="height">{pokemon.height}</Descriptions.Item>
+                <Descriptions.Item label="weigth">{pokemon.weight}</Descriptions.Item>
+              </Descriptions>
+            </Col>
+
+            <Col style={{ flex: 1 / 2 }} xs={24} sm={16} md={6} lg={8} xl={10}>
+              {/* bla bla */}
+            </Col>
+          </Row>
         </section>
 
         <section>
@@ -154,50 +207,40 @@ function WildPokemonDetail({ match }) {
                 catch
               </Button>
             }
-
-            <Button type="primary" onClick={() => catchPokemonModal()}>
-              modal
-            </Button>
-
-            <Alert
-              message="Failed"
-              description="Try to catch again, until you get the pokemon ^_^ "
-              type="warning"
-              showIcon
-            />
-
             <Modal
-              title="Title"
+              title="Gotcha"
               visible={visible}
-              onOk={() => handleOk()}
               confirmLoading={confirmLoading}
+              onOk={() => handleOk()}
               onCancel={() => handleCancel()}
             >
-              <p>{modalText}</p>
+              <Alert message="Congratulation, you got a new pokemon" type="success" showIcon />
+              <br></br>
+
+              <label>rename (alias name)</label>
               <Form onSubmit={() => alert('haha')} className="login-form">
                 <Form.Item>
-                  {/* {
-                  getFieldDecorator('username', {
-                    rules: [{ required: true, message: 'Please input your username!' }],
-                  })( */}
                   <Input
                     prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="Username"
-                  />,
-                  {/* ) */}
-                  }
-              </Form.Item>
+                    placeholder="name"
+                  />
+                </Form.Item>
               </Form>
             </Modal>
           </div>
         </section>
 
         <section className="detail-info">
-          <h3>Types</h3>
-          <PokemonTypes types={pokemonTypes} />
-
-          <h3>Moves</h3>
-          <PokemonMoves moves={pokemonMoves} />
+          <StickyContainer>
+            <Tabs defaultActiveKey="1" renderTabBar={renderTabBar}>
+              <TabPane tab="Moves" key="1" style={{ height: 200 }}>
+                <PokemonMoves moves={pokemonMoves} />
+              </TabPane>
+              <TabPane tab="Types" key="2">
+                <PokemonTypes types={pokemonTypes} />
+              </TabPane>
+            </Tabs>
+          </StickyContainer>
         </section>
       </Spin>
     </div>

@@ -31,15 +31,15 @@ function Nav() {
         //     </ul>
         // </nav>
 
-        <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
+        <Header style={{  backgroundColor:'#91d5ff', position: 'fixed', zIndex: 1, width: '100%' }}>
             {/* <div className="logo" /> */}
             {/* <Title level={3}>PokeNyamm</Title> */}
             
             <Menu
-                theme="dark"
+                // theme="dark"
                 mode="horizontal"
                 defaultSelectedKeys={['all']}
-                style={{ lineHeight: '64px' }}
+                style={{ lineHeight: '64px', backgroundColor:'#91d5ff' }}
                 mode="horizontal"
             // onClick={handleClick}
             // selectedKeys={[this.state.current]}
