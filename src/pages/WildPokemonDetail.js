@@ -82,9 +82,7 @@ function WildPokemonDetail({ match }) {
           return state
         })
         successPokemonModal()
-        // setPokemonName()
       } else {
-        // alert("failed :( , try again ");
         failedPokemonModal()
         setLoading2(false)
       }
@@ -129,9 +127,11 @@ function WildPokemonDetail({ match }) {
 
   const renderTabBar = (props, DefaultTabBar) => (
     <Sticky bottomOffset={80}>
+      {/* <> */}
       {({ style }) => (
         <DefaultTabBar {...props} style={{ ...style, zIndex: 1, background: '#fff' }} />
       )}
+      {/* </> */}
     </Sticky>
   );
 
@@ -142,7 +142,10 @@ function WildPokemonDetail({ match }) {
 
   return (
     <div className="app-wrapper" >
-      <Spin spinning={loading2} delay={500}>
+      <Spin
+        spinning={loading2}
+      // delay={500}
+      >
         <header>
           <h1 className="title">Wild Pokemon Detail</h1>
           {/* <button onClick={() => history.goBack()}>Back</button> */}
@@ -187,7 +190,7 @@ function WildPokemonDetail({ match }) {
             </Col>
 
             <Col style={{ flex: 1 / 2 }} xs={24} sm={4} md={12} lg={8} xl={10}>
-              <Descriptions title="Pokemon Profile">
+              <Descriptions title="Profile">
                 <Descriptions.Item label="name">{pokemon.name}</Descriptions.Item>
                 <Descriptions.Item label="height">{pokemon.height}</Descriptions.Item>
                 <Descriptions.Item label="weigth">{pokemon.weight}</Descriptions.Item>
@@ -233,7 +236,7 @@ function WildPokemonDetail({ match }) {
         <section className="detail-info">
           <StickyContainer>
             <Tabs defaultActiveKey="1" renderTabBar={renderTabBar}>
-              <TabPane tab="Moves" key="1" style={{ height: 200 }}>
+              <TabPane tab="Moves" key="1" style={{ /* height: 200 */ }}>
                 <PokemonMoves moves={pokemonMoves} />
               </TabPane>
               <TabPane tab="Types" key="2">
