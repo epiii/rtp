@@ -1,84 +1,96 @@
 import React, { useState, useEffect } from 'react';
-// import ReactDOM from 'react-dom';
-// import './index.css';
-import axios from 'axios';
+import PokemonList from '../components/PokemonList'
+import axios from 'axios'
+import Pagination from '../components/Pagination'
+import { BackTop, Skeleton, Switch, List, Avatar, Icon, Row, Col, Slider } from 'antd'
+
+// import { useLocalState } from '../useLocalState'
+// export const WplContext = React.createContext()
+
+const urlx = 'https://pokeapi.co/api/v2/pokemon'
 
 function MyPokemonList() {
+  const [pokemon, setPokemon] = useState([])
+  const [currentPageUrl, setCurrentPageUrl] = useState(urlx)
+  const [nextPageUrl, setNextPageUrl] = useState()
+  const [prevPageUrl, setPrevPageUrl] = useState()
+  const [loading, setLoading] = useState(true)
+  // const [pokemon, setPokemon] = useState(['bulbasaur', 'charmender'])
 
-    const [pokedex, setPokedex] = useState([])
-    const [wildPokemon, setWildPokemon] = useState({})
+  useEffect(() => {
+    setLoading(true)
+    axios.get(urlx)
 
-    useEffect(() => {
-        encounterWildPokemon()
-    }, [])
+    let cancel
+    axios.get(currentPageUrl, {
+      cancelToken: new axios.CancelToken(c => cancel = c)
+    })
+      .then(res => {
+        // console.log(res);
+        setLoading(false)
+        setNextPageUrl(res.data.next)
+        setPrevPageUrl(res.data.previous)
+        setPokemon(res.data.results.map(p => p))
+        // setPokemon(res.data.results.map(p => p.name))
+      })
+    return () => cancel()
+  }, [currentPageUrl])
 
-    const pokeId = () => {
-        const min = Math.ceil(1)
-        const max = Math.floor(151)
-        return Math.floor(Math.random() * (max - min + 1)) + min
-    }
+  function goToNextPage() {
+    setCurrentPageUrl(nextPageUrl)
+  }
 
-    const catchPokemon = (pokemon) => {
-        setPokedex(state => {
-            const monExists = (state.filter(p => pokemon.id == p.id).length > 0)
+  function goToPrevPage() {
+    setCurrentPageUrl(prevPageUrl)
+  }
 
-            if (!monExists) {
-                state = [...state, pokemon]
-                state.sort(function (a, b) {
-                    return a.id - b.id
-                })
+  // if (loading) return 'loading...'
+
+  // console.log(pokemon)
+  // console.log(pokemon[1].name)
+  return (
+    // <WplContext>
+
+      <div className="app-wrapper" >
+        <header>
+          <h1 className="title">Pokemon List</h1>
+        </header>
+
+        <Row type="flex" justify="space-around" align="middle">
+          <Pagination
+            goToNextPage={nextPageUrl ? goToNextPage : null}
+            goToPrevPage={prevPageUrl ? goToPrevPage : null}
+          />
+        </Row><br />
+        {
+          // loading ? (
+          //   <Skeleton loading={loading} avatar={'circle'} paragraph={false} />
+          // ) : (
+          <Row type="flex" justify="space-around" align="middle">
+            {
+              <PokemonList
+                loading={loading}
+                pokemon={pokemon}
+              />
             }
-            return state
-        })
-        encounterWildPokemon()
-    }
+          </Row>
+          // )
+        }
+        <br />
+        <Row type="flex" justify="space-around" align="middle">
+          <Pagination
+            goToNextPage={nextPageUrl ? goToNextPage : null}
+            goToPrevPage={prevPageUrl ? goToPrevPage : null}
+          />
+        </Row>
 
-    const encounterWildPokemon = () => {
-        const urlx = 'https://pokeapi.co/api/v2/pokemon/' + pokeId()
-        axios.get(urlx)
-            .then(res => {
-                console.log(res.data)
-                setWildPokemon(res.data)
-            })
-    }
-
-    const removePokemon = (id) => {
-        setPokedex(state => state.filter(p => p.id != id))
-    }
-
-    let imgPath = 'https://raw.githubusercontent.com/PokeApi/sprites/master/sprites/pokemon/'
-    // let imgPath = 'https://pokeapi.co/api/v2/pokemon/132/encounters'
-    return (
-        <div className="app-wrapper" >
-            <header>
-                <h1 className="title">My Pokemon List</h1>
-                {/* <h3 className="subTitle">pokemon kocheng app</h3> */}
-            </header>
-
-            <section className="wild-pokemon">
-                <h2>wild encounter</h2>
-                <img src={imgPath + wildPokemon.id + '.png'} className="sprite"></img>
-                <h3>{wildPokemon.name}</h3>
-                <button onClick={() => catchPokemon(wildPokemon)} className="catch-btn">catch</button>
-            </section>
-
-            <section className="pokedex">
-                <h2>pokedex</h2>
-                <div className="pokedex-list">
-                    {
-                        pokedex.map(pokemon => (
-                            <div className="pokemon" key={pokemon.id}>
-                                <img src={imgPath + pokemon.id + '.png'} className="sprite" />
-                                <h3 className="pokemon-name">{pokemon.name}</h3>
-                                <button onClick={() => removePokemon(pokemon.id)} className="remove">x</button>
-                            </div>
-                        ))
-                    }
-                </div>
-            </section>
+        <div>
+          <BackTop />
         </div>
-    )
+
+      </div>
+    // </WplContext>
+  );
 }
 
-export default MyPokemonList
-// ReactDOM.render(<App />, document.getElementById('root'));
+export default MyPokemonList;

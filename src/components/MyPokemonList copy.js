@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
+// import ReactDOM from 'react-dom';
+// import './index.css';
 import axios from 'axios';
-import PokemonList from './v1_ListPokemon/PokemonList';
 
-function App() {
+function MyPokemonList() {
 
     const [pokedex, setPokedex] = useState([])
     const [wildPokemon, setWildPokemon] = useState({})
@@ -52,8 +51,8 @@ function App() {
     return (
         <div className="app-wrapper" >
             <header>
-                <h1 className="title">pokecheng</h1>
-                <h3 className="subTitle">pokemon kocheng app</h3>
+                <h1 className="title">My Pokemon List</h1>
+                {/* <h3 className="subTitle">pokemon kocheng app</h3> */}
             </header>
 
             <section className="wild-pokemon">
@@ -81,4 +80,5 @@ function App() {
     )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+export default MyPokemonList
+// ReactDOM.render(<App />, document.getElementById('root'));

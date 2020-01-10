@@ -4,6 +4,9 @@ import axios from 'axios'
 import Pagination from '../components/Pagination'
 import { BackTop, Skeleton, Switch, List, Avatar, Icon, Row, Col, Slider } from 'antd'
 
+// import { useLocalState } from '../useLocalState'
+// export const WplContext = React.createContext()
+
 const urlx = 'https://pokeapi.co/api/v2/pokemon'
 
 function WildPokemonList() {
@@ -46,44 +49,47 @@ function WildPokemonList() {
   // console.log(pokemon)
   // console.log(pokemon[1].name)
   return (
-    <div className="app-wrapper" >
-      <header>
-        <h1 className="title">Pokemon List</h1>
-      </header>
+    // <WplContext>
 
-      <Row type="flex" justify="space-around" align="middle">
-        <Pagination
-          goToNextPage={nextPageUrl ? goToNextPage : null}
-          goToPrevPage={prevPageUrl ? goToPrevPage : null}
-        />
-      </Row><br />
-      {
-        // loading ? (
-        //   <Skeleton loading={loading} avatar={'circle'} paragraph={false} />
-        // ) : (
+      <div className="app-wrapper" >
+        <header>
+          <h1 className="title">Pokemon List</h1>
+        </header>
+
         <Row type="flex" justify="space-around" align="middle">
-          {
-            <PokemonList
-              loading={loading}
-              pokemon={pokemon}
-            />
-          }
+          <Pagination
+            goToNextPage={nextPageUrl ? goToNextPage : null}
+            goToPrevPage={prevPageUrl ? goToPrevPage : null}
+          />
+        </Row><br />
+        {
+          // loading ? (
+          //   <Skeleton loading={loading} avatar={'circle'} paragraph={false} />
+          // ) : (
+          <Row type="flex" justify="space-around" align="middle">
+            {
+              <PokemonList
+                loading={loading}
+                pokemon={pokemon}
+              />
+            }
+          </Row>
+          // )
+        }
+        <br />
+        <Row type="flex" justify="space-around" align="middle">
+          <Pagination
+            goToNextPage={nextPageUrl ? goToNextPage : null}
+            goToPrevPage={prevPageUrl ? goToPrevPage : null}
+          />
         </Row>
-        // )
-      }
-      <br />
-      <Row type="flex" justify="space-around" align="middle">
-        <Pagination
-          goToNextPage={nextPageUrl ? goToNextPage : null}
-          goToPrevPage={prevPageUrl ? goToPrevPage : null}
-        />
-      </Row>
 
-      <div>
-        <BackTop />
+        <div>
+          <BackTop />
+        </div>
+
       </div>
-
-    </div>
+    // </WplContext>
   );
 }
 

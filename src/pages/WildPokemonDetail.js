@@ -23,6 +23,9 @@ import {
   Checkbox
 } from 'antd'
 
+import { useLocalState } from '../useLocalState'
+// export const WplContext = React.createContext()
+
 function WildPokemonDetail({ match }) {
   const [pokemon, setPokemon] = useState([])
   const [hasCaught, setHasCaught] = useState(false)
@@ -35,6 +38,9 @@ function WildPokemonDetail({ match }) {
   const [name, setName] = useState()
   const [visible, setVisible] = useState(false)
   const [confirmLoading, setConfirmLoading] = useState(false)
+
+  const [caughtPokemon, setCaughtPokemon] = useLocalState('caughtPokemon')
+  console.log('caughtPokemon', caughtPokemon)
 
   useEffect(() => {
     fetchItem()
@@ -101,8 +107,8 @@ function WildPokemonDetail({ match }) {
 
   const failedPokemonModal = () => {
     Modal.error({
-      title: 'Confirmation',
-      content: 'Failed, try again to catch it ',
+      title: 'Failed ',
+      content: 'Sorry failed to catch pokemon, try again',
     });
   }
 
@@ -111,6 +117,7 @@ function WildPokemonDetail({ match }) {
 
     setTimeout(() => {
       setName(pokemon.name)
+      setCaughtPokemon(pokemon)
       setLoading2(false)
       setVisible(false)
       setConfirmLoading(false)
@@ -138,9 +145,9 @@ function WildPokemonDetail({ match }) {
   const { Meta } = Card;
   // let history = useHistory();
   let sp = pokemon.sprites
-  console.log(sp)
 
   return (
+    // <WplContext.Provider value={[caughtPokemon, setCaughtPokemon]}>
     <div className="app-wrapper" >
       <Spin
         spinning={loading2}
@@ -148,6 +155,7 @@ function WildPokemonDetail({ match }) {
       >
         <header>
           <h1 className="title">Wild Pokemon Detail</h1>
+          <p>{caughtPokemon}</p>
           {/* <button onClick={() => history.goBack()}>Back</button> */}
         </header>
 
@@ -247,6 +255,7 @@ function WildPokemonDetail({ match }) {
         </section>
       </Spin>
     </div>
+    // </WplContext.Provider>
   );
 }
 
