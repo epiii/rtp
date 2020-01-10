@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Skeleton, Card } from 'antd';
+import { Skeleton, Card, Result, Button } from 'antd';
 
 const { Meta } = Card;
 
@@ -10,28 +10,40 @@ export default function PokemonList({ pokemon, loading }) {
 
     return (
         // <div>{
-        pokemon.map(p => {
-            let urlx = p.url.split('/')
+        pokemon ?
+            pokemon.map(p => {
+                let urlx = p.url.split('/')
 
-            if (loading) {
-                return (
-                    <Skeleton loading={loading} avatar={'circle'} paragraph={true} />
-                )
-            } else {
-                return (
-                    <Link key={p.name} to={`/rtp/wild-pokemon-detail/${urlx[6]}`}>
-                        <Card
+                if (loading) {
+                    return (
+                        <Skeleton loading={loading} avatar={'circle'} paragraph={true} />
+                    )
+                } else {
+                    return (
+                        <Link key={p.name} to={`/rtp/wild-pokemon-detail/${urlx[6]}`}>
+                            <Card
 
-                            hoverable
-                            style={{ width: 240 }}
-                            cover={<img alt="example" src={imgPath + urlx[6] + '.png'} />}
-                        >
-                            <Meta title={p.name} description={''} />
-                        </Card>
-                    </Link>
-                )
-            }
-        })
+                                hoverable
+                                style={{ width: 240 }}
+                                cover={<img alt="example" src={imgPath + urlx[6] + '.png'} />}
+                            >
+                                <Meta title={p.name} description={''} />
+                            </Card>
+                        </Link>
+                    )
+                }
+            }) : (
+                <Result
+                    status="warning"
+                    title="You don't have any pokemon"
+                    extra={
+                        <Link to="/rtp/wild-pokemon-list">
+                            <Button type="primary" key="console">
+                                find pokemon
+                            </Button>
+                        </Link>
+                    }
+                />)
         // }</div>
 
         // <Card

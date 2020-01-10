@@ -53,7 +53,7 @@ function WildPokemonList() {
 
       <div className="app-wrapper" >
         <header>
-          <h1 className="title">Pokemon List</h1>
+          <h1 className="title">My Pokemon List</h1>
         </header>
 
         <Row type="flex" justify="space-around" align="middle">

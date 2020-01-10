@@ -117,7 +117,7 @@ function WildPokemonDetail({ match }) {
 
     setTimeout(() => {
       setName(pokemon.name)
-      setCaughtPokemon(pokemon)
+      setCaughtPokemon(JSON.stringify(pokemon))
       setLoading2(false)
       setVisible(false)
       setConfirmLoading(false)
@@ -155,7 +155,7 @@ function WildPokemonDetail({ match }) {
       >
         <header>
           <h1 className="title">Wild Pokemon Detail</h1>
-          <p>{caughtPokemon}</p>
+          {/* <p>{caughtPokemon}</p> */}
           {/* <button onClick={() => history.goBack()}>Back</button> */}
         </header>
 
